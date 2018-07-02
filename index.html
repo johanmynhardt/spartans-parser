@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+
+<head>
+<style>
+  html {
+    font-family: sans-serif;
+  }
+
+ .row {
+  display: flex;
+  flex-direction: row;
+ }
+
+ .row > div {
+    width: 50%;
+    margin: 1em;
+  }
+
+  textarea {
+    width: 100%;
+  }
+</style>
+<title>Spartan Route Text Generator</title>
+</head>
+
+<body>
+
+    <h3>Spartan Route Text Generator<hr/></h3>
+
+<div class="row">
+<div>
+    <label for="date">
+        Date<br/>
+        <input id="date" type="date" onchange="render()">    
+    </label>
+    <br/>
+
+    <label>
+       Distance<br/>
+        <input id="distance" type="number" placeholder="Distance" onchange="render()">km
+    </label><br/>
+
+    <label>
+        Strava Link<br/>
+        <input id="link" placeholder="Strava Link" oninput="render()"/>
+    </label><br/>
+
+    <label>
+        Route Text<br/>
+        <textarea rows="8" oninput="render()"></textarea>        
+    </label>
+  <button onclick="render();">Fix</button>
+</div>
+
+<code class="result"></code>
+</div>
+
+</body>
+<script>
+  console.info('hello world');
+
+let state = {
+  date: undefined,
+  distance: 0,
+  routeText: ''
+};
+
+let fixRoute = routeString => {
+  return routeString
+    .replace(/\s+/g, " ")
+    .replace(/\./g, "")
+    .split(" ")
+    .join(' ').split(/\-|–/)
+    .map(s => s.trim());
+}
+
+let transformText = (selector) => {
+    let text = document.querySelector(selector).value;
+     
+    return fixRoute(text).join('\n');
+}
+
+let dateText = selector => {
+  let dateInput = document.querySelector(selector).value;
+     let d = new Date(dateInput);
+  return `${dow(d)}:${dateInput}`;
+}
+
+function updateState() {
+     state.routeText = transformText('textarea');
+     state.date = dateText('#date');
+     state.distance = Number(document.querySelector('#distance').value);
+     state.link = document.querySelector('#link').value;
+
+     console.info('state: ', state);
+}
+
+function hasLength(x) {
+  return (x || '').length > 0;
+}
+
+function dow(dt) {
+  let ds = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  return ds[dt.getDay() -1];
+}
+
+function render() {
+
+  updateState();
+
+  let resultText = document.querySelector('.result');
+
+  resultText.innerText = [
+      `SH:${state.distance}km:${state.date}`,
+      `======`,
+      (hasLength(state.link) ? [`${state.link}`, '------'].join('\n') : null),
+      state.routeText,
+      `~~~~~~`
+  ].filter(hasLength)
+   .join('\n');
+};
+
+
+</script>
+</html>
