@@ -7,54 +7,70 @@
     font-family: sans-serif;
   }
 
- .row {
-  display: flex;
-  flex-direction: row;
- }
-
- .row > div {
-    width: 50%;
-    margin: 1em;
+  body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
 
   textarea {
+    display: grid;
+    flex-direction: row;
     width: 100%;
+    margin-right: 0em;
+    font-family: monospace;
   }
+
+
 </style>
 <title>Spartan Route Text Generator</title>
 </head>
 
 <body>
 
+    
+<div class="grid-container">
+  <div class="header">
     <h3>Spartan Route Text Generator<hr/></h3>
+  </div>
+  <div class="left">
+      lll
+  </div>
+  <div class="right">
+      <div class="left-right-container">
+          <div class="lrleft">
+             
+                  <label for="date">
+                      Date<br/>
+                      <input id="date" type="date" onchange="render()">
+                  </label>
+                  <br/>
+                  <label>
+                      Distance<br/>
+                      <input id="distance" type="number" placeholder="Distance" onchange="render()">km
+                  </label><br/>
 
-<div class="row">
-<div>
-    <label for="date">
-        Date<br/>
-        <input id="date" type="date" onchange="render()">    
-    </label>
-    <br/>
+                  <label>
+                      Strava Link<br/>
+                      <input id="link" placeholder="Strava Link" oninput="render()"/>
+                  </label><br/>
 
-    <label>
-       Distance<br/>
-        <input id="distance" type="number" placeholder="Distance" onchange="render()">km
-    </label><br/>
+                  <label>
+                      Route Text<br/>
+                      <textarea rows="8" oninput="render()"></textarea>
+                  </label>        
+          </div>
 
-    <label>
-        Strava Link<br/>
-        <input id="link" placeholder="Strava Link" oninput="render()"/>
-    </label><br/>
+          <div class="lrright">
+              <textarea rows="8" class="result" readonly></textarea>
 
-    <label>
-        Route Text<br/>
-        <textarea rows="8" oninput="render()"></textarea>        
-    </label>
-  <button onclick="render();">Fix</button>
+          </div>
+      </div>
+
+  </div>
 </div>
 
-<code class="result"></code>
-</div>
+<div class="foot">foot</div>
 
 </body>
 <script>
