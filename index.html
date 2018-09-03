@@ -58,23 +58,30 @@
                   <label>
                       Route Text<br/>
                       <textarea rows="8" oninput="render()"></textarea>
-                  </label>        
+                  </label>
           </div>
 
           <div class="lrright">
               <textarea rows="8" class="result" readonly></textarea>
-
           </div>
       </div>
 
   </div>
 </div>
 
-<div class="foot">foot</div>
+<div class="foot">foot <a href="" onclick="copyResult(event);">copy</a></div>
 
 </body>
 <script>
   console.info('hello world');
+  
+  function copyResult(e) {
+    e.preventDefault();
+    
+    document.querySelector('textarea.result').select();
+    document.execCommand('copy');
+    alert('text copied!');
+  }
 
 let state = {
   date: undefined,
@@ -128,7 +135,7 @@ function render() {
   let resultText = document.querySelector('.result');
 
   resultText.innerText = [
-      `SH:${state.distance}km:${state.date}`,
+      `${state.distance}km:${state.date}`,
       `======`,
       (hasLength(state.link) ? [`${state.link}`, '------'].join('\n') : null),
       state.routeText,
