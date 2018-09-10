@@ -2,8 +2,14 @@
 <html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
 <style>
+html, body {
+  padding: 0;
+  margin: 0;
+}
   html {
+    height: 100%;
     font-family: sans-serif;
   }
 
@@ -21,6 +27,36 @@
     font-family: monospace;
   }
 
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .header {
+    color: white;
+    background-color: black;
+  }
+
+  .scroll {
+    overflow-y: scroll;
+  }
+
+  .comfort {
+    padding: 1em;
+  }
+
+  .pad-left {
+    padding-left: 1em;
+  }
+
+  .flex {
+    flex: 1;
+  }
+  .flex-grow {
+    /* flex: 1; */
+  }
+
 
 </style>
 <title>Spartan Route Text Generator</title>
@@ -28,18 +64,16 @@
 
 <body>
 
-    
+
 <div class="grid-container">
   <div class="header">
-    <h3>Spartan Route Text Generator<hr/></h3>
+    <h3 class="pad-left">Spartan Route Text Generator</h3>
   </div>
-  <div class="left">
-      lll
-  </div>
-  <div class="right">
+
+  <div class="middle scroll comfort flex">
       <div class="left-right-container">
           <div class="lrleft">
-             
+
                   <label for="date">
                       Date<br/>
                       <input id="date" type="date" onchange="render()">
@@ -61,23 +95,26 @@
                   </label>
           </div>
 
-          <div class="lrright">
+          <div class="lrright flex-grow">
               <textarea rows="8" class="result" readonly></textarea>
           </div>
       </div>
 
   </div>
+  <div class="foot comfort">foot <a href="" onclick="copyResult(event);">copy</a>
+
+  </div>
 </div>
 
-<div class="foot">foot <a href="" onclick="copyResult(event);">copy</a></div>
+
 
 </body>
 <script>
   console.info('hello world');
-  
+
   function copyResult(e) {
     e.preventDefault();
-    
+
     document.querySelector('textarea.result').select();
     document.execCommand('copy');
     alert('text copied!');
@@ -100,7 +137,7 @@ let fixRoute = routeString => {
 
 let transformText = (selector) => {
     let text = document.querySelector(selector).value;
-     
+
     return fixRoute(text).join('\n');
 }
 
