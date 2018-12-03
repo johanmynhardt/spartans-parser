@@ -2,110 +2,119 @@
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
-<style>
-html, body {
-  padding: 0;
-  margin: 0;
-}
-  html {
-    height: 100%;
-    font-family: sans-serif;
-  }
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+        }
 
-  body {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
+        html {
+            height: 100%;
+            font-family: sans-serif;
+        }
 
-  textarea {
-    display: grid;
-    flex-direction: row;
-    width: 100%;
-    margin-right: 0em;
-    font-family: monospace;
-  }
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
 
-  .grid-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
+        textarea {
+            display: grid;
+            flex-direction: row;
+            width: 100%;
+            margin-right: 0em;
+            font-family: monospace;
+        }
 
-  .header {
-    color: white;
-    background-color: black;
-  }
+        .grid-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
 
-  .scroll {
-    overflow-y: scroll;
-  }
+        .header {
+            color: white;
+            background-color: black;
+        }
 
-  .comfort {
-    padding: 1em;
-  }
+        .scroll {
+            overflow-y: scroll;
+        }
 
-  .pad-left {
-    padding-left: 1em;
-  }
+        .comfort {
+            padding: 1em;
+        }
 
-  .flex {
-    flex: 1;
-  }
-  .flex-grow {
-    /* flex: 1; */
-  }
+        .pad-left {
+            padding-left: 1em;
+        }
+
+        .flex {
+            flex: 1;
+        }
+
+        .flex-grow {
+            /* flex: 1; */
+        }
+
+        .foot {
+            font-size: smaller;
+            text-align: center;
+            background-color: #eee;
+        }
 
 
-</style>
-<title>Spartan Route Text Generator</title>
+    </style>
+    <title>Spartan Route Text Generator</title>
 </head>
 
 <body>
 
 
 <div class="grid-container">
-  <div class="header">
-    <h3 class="pad-left">Spartan Route Text Generator</h3>
-  </div>
+    <div class="header">
+        <h3 class="pad-left">Spartan Route Text Generator</h3>
+    </div>
 
-  <div class="middle scroll comfort flex">
-      <div class="left-right-container">
-          <div class="lrleft">
+    <div class="middle scroll comfort flex">
+        <div class="left-right-container">
+            <div class="lrleft">
 
-                  <label for="date">
-                      Date<br/>
-                      <input id="date" type="date" onchange="render()">
-                  </label>
-                  <br/>
-                  <label>
-                      Distance<br/>
-                      <input id="distance" type="number" placeholder="Distance" onchange="render()">km
-                  </label><br/>
+                <label for="date">
+                    Date<br/>
+                    <input id="date" type="date" onchange="render()">
+                </label>
+                <br/>
+                <label>
+                    Distance<br/>
+                    <input id="distance" type="number" placeholder="Distance" onchange="render()">km
+                </label><br/>
 
-                  <label>
-                      Strava Link<br/>
-                      <input id="link" placeholder="Strava Link" oninput="render()"/>
-                  </label><br/>
+                <label>
+                    Strava Link<br/>
+                    <input id="link" placeholder="Strava Link" oninput="render()"/>
+                </label><br/>
 
-                  <label>
-                      Route Text<br/>
-                      <textarea rows="8" oninput="render()"></textarea>
-                  </label>
-          </div>
+                <label>
+                    Route Text<br/>
+                    <textarea rows="8" oninput="render()"></textarea>
+                </label>
+            </div>
 
-          <div class="lrright flex-grow">
-              <textarea rows="8" class="result" readonly></textarea>
-          </div>
-      </div>
+            <div class="lrright flex-grow">
+                <textarea rows="8" class="result" readonly></textarea>
+            </div>
+        </div>
 
-  </div>
-  <div class="foot comfort">foot <a href="" onclick="copyResult(event);">copy</a>
+    </div>
 
-  </div>
+    <div class="foot comfort">
+        foot <a href="" onclick="copyResult(event);">copy</a>
+
+    </div>
 </div>
-
 
 
 </body>
@@ -120,66 +129,66 @@ html, body {
     alert('text copied!');
   }
 
-let state = {
-  date: undefined,
-  distance: 0,
-  routeText: ''
-};
+  let state = {
+    date: undefined,
+    distance: 0,
+    routeText: ''
+  };
 
-let fixRoute = routeString => {
-  return routeString
-    .replace(/\s+/g, " ")
-    .replace(/\./g, "")
-    .split(" ")
-    .join(' ').split(/\-|–/)
-    .map(s => s.trim());
-}
+  let fixRoute = routeString => {
+    return routeString
+      .replace(/\s+/g, " ")
+      .replace(/\./g, "")
+      .split(" ")
+      .join(' ').split(/\-|–/)
+      .map(s => s.trim());
+  }
 
-let transformText = (selector) => {
+  let transformText = (selector) => {
     let text = document.querySelector(selector).value;
 
     return fixRoute(text).join('\n');
-}
+  }
 
-let dateText = selector => {
-  let dateInput = document.querySelector(selector).value;
-     let d = new Date(dateInput);
-  return `${dow(d)}:${dateInput}`;
-}
+  let dateText = selector => {
+    let dateInput = document.querySelector(selector).value;
+    let d = new Date(dateInput);
+    return `${dow(d)}:${dateInput}`;
+  }
 
-function updateState() {
-     state.routeText = transformText('textarea');
-     state.date = dateText('#date');
-     state.distance = Number(document.querySelector('#distance').value);
-     state.link = document.querySelector('#link').value;
+  function updateState() {
+    state.routeText = transformText('textarea');
+    state.date = dateText('#date');
+    state.distance = Number(document.querySelector('#distance').value);
+    state.link = document.querySelector('#link').value;
 
-     console.info('state: ', state);
-}
+    console.info('state: ', state);
+  }
 
-function hasLength(x) {
-  return (x || '').length > 0;
-}
+  function hasLength(x) {
+    return (x || '').length > 0;
+  }
 
-function dow(dt) {
-  let ds = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  return ds[dt.getDay() -1];
-}
+  function dow(dt) {
+    let ds = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return ds[dt.getDay() - 1];
+  }
 
-function render() {
+  function render() {
 
-  updateState();
+    updateState();
 
-  let resultText = document.querySelector('.result');
+    let resultText = document.querySelector('.result');
 
-  resultText.innerText = [
+    resultText.innerText = [
       `${state.distance}km:${state.date}`,
       `======`,
       (hasLength(state.link) ? [`${state.link}`, '------'].join('\n') : null),
       state.routeText,
       `~~~~~~`
-  ].filter(hasLength)
-   .join('\n');
-};
+    ].filter(hasLength)
+      .join('\n');
+  };
 
 
 </script>
