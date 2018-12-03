@@ -59,15 +59,39 @@
             /* flex: 1; */
         }
 
+        .row {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .panel {
+            margin: 1em;
+        }
+
+        .no-side-margin {
+            margin-left: initial;
+            margin-right: initial;
+        }
+
         .foot {
             font-size: smaller;
             text-align: center;
             background-color: #eee;
         }
 
+        .foot > ul {
+            display: inline-block;
+            margin: initial;
+        }
+
+        .foot > ul > li {
+            display: inline-block;
+        }
+
+
 
     </style>
-    <title>Spartan Route Text Generator</title>
+    <title>Spartan Harriers: Route Text Generator</title>
 </head>
 
 <body>
@@ -75,7 +99,7 @@
 
 <div class="grid-container">
     <div class="header">
-        <h3 class="pad-left">Spartan Route Text Generator</h3>
+        <h3 class="pad-left">Spartan Harriers: Route Text Generator</h3>
     </div>
 
     <div class="middle scroll comfort flex">
@@ -99,20 +123,28 @@
 
                 <label>
                     Route Text<br/>
-                    <textarea rows="8" oninput="render()"></textarea>
+                    <textarea rows="8" oninput="render()" style="resize: none;"></textarea>
                 </label>
             </div>
 
             <div class="lrright flex-grow">
-                <textarea rows="8" class="result" readonly></textarea>
+                <textarea rows="8" class="result" readonly style="resize:vertical;"></textarea>
+            </div>
+
+            <div class="panel no-side-margin row">
+                <button data-action="copyResult">Copy</button>
             </div>
         </div>
 
     </div>
 
     <div class="foot comfort">
-        foot <a href="" onclick="copyResult(event);">copy</a>
+        Spartan Harriers - 2018
 
+        <ul>
+            <li>Other Apps:</li>
+            <li><a href="post-composer.html">Post Composer</a></li>
+        </ul>
     </div>
 </div>
 
@@ -142,19 +174,19 @@
       .split(" ")
       .join(' ').split(/\-|–/)
       .map(s => s.trim());
-  }
+  };
 
   let transformText = (selector) => {
     let text = document.querySelector(selector).value;
 
     return fixRoute(text).join('\n');
-  }
+  };
 
   let dateText = selector => {
     let dateInput = document.querySelector(selector).value;
     let d = new Date(dateInput);
     return `${dow(d)}:${dateInput}`;
-  }
+  };
 
   function updateState() {
     state.routeText = transformText('textarea');
@@ -188,7 +220,13 @@
       `~~~~~~`
     ].filter(hasLength)
       .join('\n');
-  };
+  }
+
+  document.addEventListener('click', e => {
+    if (e.target.dataset.action) {
+      window[e.target.dataset.action](e);
+    }
+  });
 
 
 </script>
