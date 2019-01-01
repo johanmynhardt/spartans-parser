@@ -158,6 +158,8 @@
         <div class="row">
             Select Date
             <input data-field="date" type="date"/>
+            Time
+            <input data-field="time" type="time"/>
         </div>
 
         <div class="js-distance-container">
@@ -198,12 +200,36 @@
 
     summary: (fd, ld) => `${fd.getDate()} ${DateFormat.month[fd.getMonth()]} - ${ld.getDate()} ${DateFormat.month[ld.getMonth()]} ${ld.getFullYear()}`,
 
+    nn: i => i < 10 ? `0${i}` : `${i}`,
+
+    asYMD: (date) => [date.getFullYear(), date.getMonth()+1, date.getDate()]
+      .map(DateFormat.nn)
+      .join("-"),
+
+    asUTC: date => {
+
+      let time = [date.getUTCHours(), date.getUTCMinutes()].map(DateFormat.nn).join(':');
+
+      let string_for_date = `${date.getUTCFullYear()}-${DateFormat.nn(date.getMonth()+1)}-${DateFormat.nn(date.getDate())}T${time}:00Z`;
+      console.info('string-for-date: ', string_for_date);
+      return new Date(string_for_date);
+    },
+
     dateString: date => {
       let d = new Date(date);
       let dow = DateFormat.dow[d.getDay()];
       let month = DateFormat.month[d.getMonth()];
 
       return `${dow} ${d.getDate()} ${month} ${d.getFullYear()} @ ${d.getHours()}:${d.getMinutes() <= 9 ? '0' : ''}${d.getMinutes()}`;
+    },
+
+    timeString: date => {
+      let d = new Date(date);
+      return [
+        `${d.getUTCHours() <= 9 ? '0': ''}${d.getUTCHours()}`,
+        `:`,
+        `${d.getUTCMinutes() <= 9 ? '0': ''}${d.getUTCMinutes()}`
+      ].join('') ;
     }
   };
 
@@ -229,14 +255,9 @@
     cards.push({
       id: maxId,
       date: new Date(),
+      time: new Date(),
       distances: []
     });
-  }
-
-  function asYMD(date) {
-    return [date.getFullYear(), date.getMonth()+1, date.getDate()]
-      .map(i => i < 10 ? `0${i}` : `${i}`)
-      .join("-");
   }
 
   function render() {
@@ -245,7 +266,8 @@
     cards.forEach(card => {
       const cardNode = findTemplate('js-date-dialog');
       cardNode.setAttribute('data-card-id', card.id);
-      cardNode.querySelector('input[data-field=date]').valueAsDate = new Date(asYMD(card.date));
+      cardNode.querySelector('input[data-field=date]').valueAsDate = new Date(DateFormat.asYMD(card.date));
+      cardNode.querySelector('input[data-field=time]').valueAsDate = DateFormat.asUTC(card.time);
 
       // distances
       cardNode.querySelector('div.js-distances').innerHTML = '';
@@ -306,7 +328,7 @@
 
     let dateSections = sortedCards
       .map(card => ['',
-        `* ${DateFormat.dow[card.date.getDay()]} ${card.date.getDate()} ${DateFormat.monthFull[card.date.getMonth()]}`
+        `* ${DateFormat.dow[card.date.getDay()]} ${card.date.getDate()} ${DateFormat.monthFull[card.date.getMonth()]} @ ${DateFormat.timeString(card.time)}`
       ].concat(card.distances.map(dist => `  - ${dist.distance}km:${dist.link}`)));
 
     let lines = [
@@ -333,6 +355,10 @@
 
       if (e.target.dataset.field === 'date') {
         card.date = new Date(e.target.value);
+      }
+
+      if (e.target.dataset.field === 'time') {
+        card.time = new Date(`${new Date().getUTCFullYear()}-01-01T${e.target.value}:00Z`);
       }
 
       if (['link', 'distance'].indexOf(e.target.dataset.field) > -1) {
