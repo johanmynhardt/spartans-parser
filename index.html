@@ -88,6 +88,17 @@
             display: inline-block;
         }
 
+        a:visited {
+            color: inherit;
+        }
+
+        .card {
+            box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.4);
+            padding: 1em;
+            margin-bottom: 1em;
+            border-radius: 0.7em;
+        }
+
 
 
     </style>
@@ -99,42 +110,13 @@
 
 <div class="grid-container">
     <div class="header">
+    <a href="#!/" style="text-decoration: none;">
         <h3 class="pad-left">Spartan Harriers: Route Text Generator</h3>
+    </a>
     </div>
 
-    <div class="middle scroll comfort flex">
-        <div class="left-right-container">
-            <div class="lrleft">
+    <div class="middle scroll comfort flex js-content">
 
-                <label for="date">
-                    Date<br/>
-                    <input id="date" type="date" onchange="render()">
-                </label>
-                <br/>
-                <label>
-                    Distance<br/>
-                    <input id="distance" type="number" placeholder="Distance" onchange="render()">km
-                </label><br/>
-
-                <label>
-                    Strava Link<br/>
-                    <input id="link" placeholder="Strava Link" oninput="render()"/>
-                </label><br/>
-
-                <label>
-                    Route Text<br/>
-                    <textarea rows="8" oninput="render()" style="resize: none;"></textarea>
-                </label>
-            </div>
-
-            <div class="lrright flex-grow">
-                <textarea rows="8" class="result" readonly style="resize:vertical;"></textarea>
-            </div>
-
-            <div class="panel no-side-margin row">
-                <button data-action="copyResult">Copy</button>
-            </div>
-        </div>
 
     </div>
 
@@ -142,9 +124,222 @@
         Spartan Harriers - 2018
 
         <ul>
+            <li><a href="#!/help">[help]</a></li>
             <li>Other Apps:</li>
             <li><a href="post-composer.html">Post Composer</a></li>
         </ul>
+    </div>
+</div>
+
+<div hidden id="templates">
+    <div class="left-right-container js-main-inputs">
+        <div class="lrleft">
+
+            <label for="date">
+                Date<br/>
+                <input id="date" type="date" onchange="render()">
+            </label>
+            <br/>
+            <label>
+                Distance<br/>
+                <input id="distance" type="number" placeholder="Distance" onchange="render()">km
+            </label><br/>
+
+            <label>
+                Route Text<br/>
+                <textarea rows="8" oninput="render()" style="resize: none;"></textarea>
+            </label>
+        </div>
+
+        <div class="lrright flex-grow">
+            <textarea rows="8" class="result" readonly style="resize:vertical;"></textarea>
+        </div>
+
+        <div class="panel no-side-margin row">
+            <button data-action="copyResult">Copy</button>
+        </div>
+    </div>
+
+    <div class="js-help">
+        <a href="#!/">Back</a>
+
+            <h1>Help</h1>
+        <article>
+
+            <section>
+                <h1>What is this?</h1>
+
+                <p>
+                    The tools available in this app was created to save some time when
+                    mapping run routes when received from my running captain.
+                </p>
+
+                <p>
+                    The routes for the next week is received in a MS Word document in a
+                    cue-style:
+
+                </p>
+                <div class="card">
+                    <pre>
+                    <code>
+Club – Ladies Mile – Parish Church
+(water)(Regroup) – Parish Rd –– Left into
+Southern Cross (water top of
+Rhodes)(Regroup) – Rhodes Drive -Right
+into Hohenort – left Spilhaus – right
+Hohenhort – left into Brommersvlei (water at
+Hotel) Regroup – right Constantia Rd – left
+Spaanschemat – left Kendal – Owen – Club.
+                    </code>
+                    </pre>
+                    Verbatim example
+                </div>
+
+                <p>
+                    To the trained eye, this is bit of an eyesore with dashes, n-, and m-dashes
+                    as well as double dashes: "<code> -- </code>". When trying to read from that
+                    when creating a route on Strava is really painful.
+                </p>
+                <p>
+                    So I've smashed together some apps over time to help me normalise
+                    the information for easier use and assisting in consistently creating
+                    route posts that I post to Strava. (Doing it by hand was a mission of saving
+                    a text document, copying, updating and double-checking that everything is
+                    correct.)
+                </p>
+
+                <p>
+                    With this app, the same input is transformed to the following, simply by
+                    pasting it into a textarea:
+                </p>
+
+                <div class="card">
+                    <pre>
+                    <code>
+15km:Sat:2019-02-09
+======
+Club
+Ladies Mile
+Parish Church (water)(Regroup)
+Parish Rd
+
+Left into Southern Cross (water top of Rhodes)(Regroup)
+Rhodes Drive
+Right into Hohenort
+left Spilhaus
+right Hohenhort
+left into Brommersvlei (water at Hotel) Regroup
+right Constantia Rd
+left Spaanschemat
+left Kendal
+Owen
+Club
+~~~~~~
+                    </code>
+                    </pre>
+                    Verbatim example of transformed input
+                </div>
+
+            </section>
+
+            <section>
+                <h1>Process Overview</h1>
+
+                <ol> <h4>Part 1: This parser</h4>
+                    <li>Open Document</li>
+                    <li>Locate Day</li>
+                    <li>Locate Distance</li>
+                    <li>Copy Route Cue</li>
+                    <li>Go <a href="#!/">here</a></li>
+                    <li>Select Date</li>
+                    <li>Set Distance</li>
+                    <li>Paste Copied Cue</li>
+                    <li>Click Copy button</li>
+                    <li>Go to Part 2</li>
+                </ol>
+
+                <ol> <h4>Part 2: Strava</h4>
+                    <li>
+                        In a new browser tab, go to
+                        <a href="http://strava.com/routes/new">Strava</a> to create a
+                        new route.
+                    </li>
+                    <li>
+                        Locate the clubhouse in the map view by zooming and panning
+                        to Meadowridge.
+                    </li>
+                    <li>
+                        Referencing the parser's transformed text, click a start
+                        point in one of the roads next to the club, according to the
+                        cue details.
+                    </li>
+                    <li>
+                        Add points along the roads to complete the map and the end point.
+                    </li>
+                    <li>Click Save</li>
+                    <li>Paste the previously copied text into the description input.</li>
+                    <li>
+                        Copy the first line for the route name, and paste it in the
+                        Name field.
+                    </li>
+                    <li>Make sure the route is public (Private remains unchecked)</li>
+                    <li>Click Save</li>
+                    <li>Click <em>View My Route</em></li>
+                    <li>Copy the URL for use elsewhere (most likely <a href="post-composer.html">here</a>)</li>
+                    <li>
+                        If you are helping out a buddy that does the post for the week's runs,
+                        send them this URL.
+                    </li>
+                    <li>
+                        Repeat for every distance :)
+                    </li>
+                    <li>
+                        If you are the buddy composing the post for the week's runs, go to
+                        Part 3.
+                    </li>
+                </ol>
+
+                <ol> <h4>Part 3: Post Composer</h4>
+                    <p>The Post Composer is a utility to create weekly posts in a consistent
+                        format. It allows adding dates, and distances for each date as well
+                        as starting times.</p>
+
+                    <li>Open the <a href="post-composer.html">composer</a></li>
+                    <li>
+                        Click "Add Date" once for each day, and set the date using the
+                        calendar selector.
+                    </li>
+                    <li>
+                        Set the time.
+                    </li>
+                    <li>
+                        Click "Add Distance" for each distance for that date.
+                    </li>
+                    <li>
+                        Set the distance.
+                    </li>
+                    <li>
+                        Paste the link.
+                    </li>
+                    <li>
+                        Repeat for all days and distances.
+                    </li>
+                    <li>
+                        If additional notes are required, click "Add Note"
+                    </li>
+                    <li>
+                        When finally done, click the now enabled, "Get Text". A dialog
+                        will pop up with the formatted route text. It will also select
+                        the text and copy it to your clipboard.
+                    </li>
+                    <li>
+                        Head over to your Strava club's group and create a new post from
+                        the text just copied. Remember to include a nice running-related
+                        picture!
+                    </li>
+                </ol>
+            </section>
+        </article>
     </div>
 </div>
 
@@ -192,7 +387,6 @@
     state.routeText = transformText('textarea');
     state.date = dateText('#date');
     state.distance = Number(document.querySelector('#distance').value);
-    state.link = document.querySelector('#link').value;
 
     console.info('state: ', state);
   }
@@ -215,7 +409,6 @@
     resultText.innerText = [
       `${state.distance}km:${state.date}`,
       `======`,
-      (hasLength(state.link) ? [`${state.link}`, '------'].join('\n') : null),
       state.routeText,
       `~~~~~~`
     ].filter(hasLength)
@@ -226,6 +419,43 @@
     if (e.target.dataset.action) {
       window[e.target.dataset.action](e);
     }
+  });
+
+  window.addEventListener('load', e => {
+    views.updateView();
+  });
+
+  const views = {
+    jsContent: () => {
+      let jsContent = document.querySelector('.js-content');
+
+      let oldContent = jsContent.firstChild;
+
+      templates.appendChild(oldContent);
+      return jsContent;
+    },
+
+    '/help': () => {
+      console.info('instating /help');
+      let jsContent = views.jsContent();
+
+      jsContent.appendChild(document.querySelector('.js-help'));
+    },
+
+    default: () => {
+      let jsContent = views.jsContent();
+
+      jsContent.appendChild(document.querySelector('.js-main-inputs'));
+    },
+
+    updateView: () => {
+      (views[location.hash.split('#!')[1]] || views.default)();
+    }
+  };
+
+  window.addEventListener('hashchange', e => {
+    console.info('hash: ', location.hash);
+    views.updateView();
   });
 
 

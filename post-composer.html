@@ -119,6 +119,10 @@
 
             /*border: 1px solid black;*/
         }
+
+        textarea.js-modal-text {
+            resize: vertical;
+        }
     </style>
     <title>Spartan Routes</title>
 </head>
@@ -201,7 +205,7 @@
     </div>
     <h1 class="js-modal-title">Routes Text</h1>
 
-    <textarea class="js-modal-text" rows="20"></textarea>
+    <textarea class="js-modal-text" rows="20" readonly></textarea>
 </div>
 
 </body>
@@ -374,9 +378,10 @@
   function getPostText(event) {
     let textArea = document.querySelector('.js-modal-text');
     textArea.value = produceNote(cards, notes);
-    let modal = document.querySelector('[data-modal-id=routeText');
+    let modal = document.querySelector('[data-modal-id=routeText]');
     modal.removeAttribute('hidden');
     textArea.select();
+    document.execCommand('copy');
   }
 
   document.addEventListener('input', e => {
