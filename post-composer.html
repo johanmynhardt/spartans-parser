@@ -107,6 +107,18 @@
             background-color: dodgerblue;
             border: 1px solid white;
         }
+
+        .modal {
+            position: fixed;
+            margin-left: auto;
+            margin-right: auto;
+            width: 600px;
+            left: calc(50% - 300px);
+            top: calc(20%);
+            background-color: white;
+
+            /*border: 1px solid black;*/
+        }
     </style>
     <title>Spartan Routes</title>
 </head>
@@ -179,6 +191,17 @@
             <textarea style="resize:none;" data-field="notes" rows="10"></textarea>
         </div>
     </div>
+</div>
+
+<div class="modal card" data-modal-id="routeText" hidden>
+    <div class="row">
+        <span class="flex"></span>
+
+        <button data-action="removeModalDialog" class="close">X</button>
+    </div>
+    <h1 class="js-modal-title">Routes Text</h1>
+
+    <textarea class="js-modal-text" rows="20"></textarea>
 </div>
 
 </body>
@@ -306,6 +329,13 @@
     cards = cards.filter(c => c.id !== removeId);
   }
 
+  function removeModalDialog(event) {
+    let d = findUpwards(event.target, 'data-modal-id');
+    if (d) {
+      d.setAttribute('hidden', '');
+    }
+  }
+
   function addDistance(event) {
     console.info('add distance requested: ', event);
     let cardId = Number(findUpwards(event.target, 'data-card-id').dataset.cardId);
@@ -342,7 +372,11 @@
   }
 
   function getPostText(event) {
-    window.alert(produceNote(cards, notes));
+    let textArea = document.querySelector('.js-modal-text');
+    textArea.value = produceNote(cards, notes);
+    let modal = document.querySelector('[data-modal-id=routeText');
+    modal.removeAttribute('hidden');
+    textArea.select();
   }
 
   document.addEventListener('input', e => {
