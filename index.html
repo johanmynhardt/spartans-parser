@@ -396,8 +396,8 @@ Club
   }
 
   function dow(dt) {
-    let ds = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return ds[dt.getDay() - 1];
+    let ds = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    return ds[dt.getDay()];
   }
 
   function render() {
