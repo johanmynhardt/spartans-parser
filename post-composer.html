@@ -154,6 +154,7 @@
 
         <div>
             <button data-action="getPostText" class="js-button-get-text" disabled>Get Text</button>
+            <button data-action="getPostJson" class="js-button-get-text" disabled>Get JSON</button>
         </div>
 
     </div>
@@ -172,7 +173,7 @@
             <button data-action="removeDateDialog" class="close">X</button>
         </div>
         <div class="row">
-            Select Date
+            Select Date (<span data-field="date-display"></span>)
             <input data-field="date" type="date"/>
             Time
             <input data-field="time" type="time"/>
@@ -242,6 +243,8 @@
       return new Date(string_for_date);
     },
 
+    dayString: date => DateFormat.dow[new Date(date).getDay()],
+
     dateString: date => {
       let d = new Date(date);
       let dow = DateFormat.dow[d.getDay()];
@@ -293,6 +296,7 @@
     cards.forEach(card => {
       const cardNode = findTemplate('js-date-dialog');
       cardNode.setAttribute('data-card-id', card.id);
+      cardNode.querySelector('span[data-field="date-display"]').innerText = DateFormat.dayString(card.date);
       cardNode.querySelector('input[data-field=date]').valueAsDate = new Date(DateFormat.asYMD(card.date));
       cardNode.querySelector('input[data-field=time]').valueAsDate = DateFormat.asUTC(card.time);
 
@@ -310,14 +314,16 @@
       document.querySelector('div.js-cards-list').appendChild(cardNode);
     });
 
-    let btnGetText = document.querySelector('button.js-button-get-text');
-    if (cards.length > 0) {
-      btnGetText.classList.add('primary');
-      btnGetText.removeAttribute('disabled');
-    } else {
-      btnGetText.classList.remove('primary');
-      btnGetText.setAttribute('disabled', '');
-    }
+    [...document.querySelectorAll('button.js-button-get-text')].forEach(btn => {
+      if (cards.length > 0) {
+        btn.classList.add('primary');
+        btn.removeAttribute('disabled');
+      } else {
+        btn.classList.remove('primary');
+        btn.setAttribute('disabled', '');
+      }
+    });
+
   }
 
   function findUpwards(from, selector) {
@@ -384,6 +390,16 @@
     document.execCommand('copy');
   }
 
+  function getPostJson(event) {
+    let textArea = document.querySelector('.js-modal-text');
+    produceNote(cards, notes);
+    textArea.value = JSON.stringify({cards: cards, notes: notes});
+    let modal = document.querySelector('[data-modal-id=routeText]');
+    modal.removeAttribute('hidden');
+    textArea.select();
+    document.execCommand('copy');
+  }
+
   document.addEventListener('input', e => {
     console.info('input change: ', e);
     let dateCard = findUpwards(e.target, `data-card-id`);
@@ -394,6 +410,8 @@
 
       if (e.target.dataset.field === 'date') {
         card.date = new Date(e.target.value);
+
+        render();
       }
 
       if (e.target.dataset.field === 'time') {
